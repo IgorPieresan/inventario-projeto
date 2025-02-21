@@ -153,11 +153,6 @@ class GoogleSheetsService {
   }
 }
 
-  List<dynamic> _getFormattedValues(String text, String scanType) {
-    final timestamp = DateTime.now().toIso8601String();
-    return scanType == 'patrimonio' ? [timestamp, text] : [timestamp, '', text];
-  }
-
 /// Tela de captura com a câmera
 class CameraScreen extends StatefulWidget {
   final List<CameraDescription> cameras;
