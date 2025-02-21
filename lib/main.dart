@@ -1,7 +1,9 @@
 // Importações necessárias
+import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:googleapis/sheets/v4.dart' hide Padding;
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/// Tela inicial com botão para acessar a câmera
+/// Tela inicial com botões para diferentes tipos de digitalização
 class MainScreen extends StatelessWidget {
   final List<CameraDescription> cameras;
 
@@ -39,32 +41,17 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Scanner'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Inventário'), centerTitle: true),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton.icon(
-              icon: const Icon(Icons.camera_alt, size: 40),
-              label: const Text(
-                'INICIAR DIGITALIZAÇÃO',
-                style: TextStyle(fontSize: 20),
-              ),
-              onPressed: () => _navigateToCameraScreen(context),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 20, horizontal: 30),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-            ),
+            _buildTypeButton(context, label: 'PATRIMÔNIO', scanType: 'patrimonio'),
             const SizedBox(height: 20),
+            _buildTypeButton(context, label: 'MODELO', scanType: 'modelo'),
+            const SizedBox(height: 30),
             const Text(
-              'Toque no botão para abrir a câmera',
+              'Selecione o tipo de digitalização',
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
@@ -73,73 +60,118 @@ class MainScreen extends StatelessWidget {
     );
   }
 
-  void _navigateToCameraScreen(BuildContext context) {
+  Widget _buildTypeButton(BuildContext context, {required String label, required String scanType}) {
+    return SizedBox(
+      width: 250,
+      child: ElevatedButton(
+        onPressed: () => _navigateToCameraScreen(context, scanType),
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 18),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+        child: Text(label, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+      ),
+    );
+  }
+
+  void _navigateToCameraScreen(BuildContext context, String scanType) {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-        builder: (context) => CameraScreen(cameras: cameras),
-      )
+      context,
+      MaterialPageRoute(builder: (context) => CameraScreen(cameras: cameras, scanType: scanType)),
     );
   }
 }
+
 /// Serviço para integração com Google Sheets
 class GoogleSheetsService {
-  // Credenciais de autenticação
-  static final _credentials = ServiceAccountCredentials.fromJson({
-    "type": "service_account",
-    "project_id": "inventario-ti-451517",
-    "private_key_id": "c5926ed9a7c3e977d9baa8e671d799b9526db5ce",
-    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDcFvTaCE4AiPHH\ndR36erRSLlFms/GLMUMGhiuIXTZzlrrnUKySTxkOK1ZYRWURIYUpI7QbrT2ZyqRs\nJtCpE7rC3XytalHYDG7CyByQYfop48msRf5ZR9v1dS7vnpaouQMasGpPb2FOEy8g\n3Rl31XEqCNGyDKJOiwCX2+YOqebT25aXDtprUJohKsKg3Zh/jeM8HMKMOEbDWPmR\nhqA/WYtIacRl5NmfVG3bVV7XE594wBbxv17PVmDwTVE0zOYDYslo+rUKhQvUN8Uf\ngQQNbSU8Y0dK+u4qHDJL4XJxGvhzrISHoWmyUh3DfsIz+2/Pup6OsNnkQwEoOxVn\nzjn49G4NAgMBAAECggEABW8DqIZf9p9q6LO5g7+XyBegptp2citLLlQNqxYyC/SC\ntMdHG22cfr8PKKq97ghX00YwYiaKyMs59/mVWTdFex4gv99KGf1klqZ+HgptNK+N\nARXRS778bTjxabUOnyfCLdyBI2jqjBTpKvSKdmzsmE8TbkPlle7Umusw6NfE/SH4\n/T/KpRjhfIUU4QvAmgshssnBzbQ5qhf7UXF1xXdNmtVrKYjS9jVj9EM71utjE07m\nXibb+jOufNSvI26DOwMqf9cnvQM5NE8ViyM8+tFXkAylrbya9mehx9RJf+WqCTc+\nKDNMB2txgd33kZ6XBNdzicsSpYkAkOW852naIZOFeQKBgQD8+xIumpFDfts1gSEp\nPMr02GENBYGrrMSnfaVMm5Am9b1qMgl6zsVbVSxsyxRtN7oLmFAMeFiq7u3NPFju\nnS/QgitYVDn/pJv6MvZ7Kqo6iN2OlD6Ua4F+xLF8fL5uSA1s4SXSgEhw6XLUViz2\nLeTpoXXZ8G4j8dJMAPhLS4A/wwKBgQDet2TL86GALrhjVW5UZUuslS8duGPMZwLZ\n6+K3fQLQhhdPSvWObwokTLJDqgXXpGPDCN1sHrf8LIo9YtUCO7vAaoDzoJ+AtbvG\nxnHVdJbfFtnwB7MQK66bkFp4THbQmOhKDWmEaX+PiCv6luYbbEgyrEN5XocA/HPk\nv/O/71QN7wKBgG8y0SgpCucXMLXQ/8mHjlKXdflqTTgv5fUVVn5Y9sEZTVwLiH0x\nvDBMPQ3JKj5ju2RzW+RPVfI0udR3zUN9VlIZlYHq69+B9InCsvMqqs618GVGpkdJ\nBg+516Y3kuEYzMXqJVzkxHLVOoM5KeRAAhnrvcjBVTh5iA2ec4VtN39PAoGAXoHw\nEePGaoBo2i4MbV+2pvt/TNtL7hbgTN0eDcLMiPP9vDYQ0WopIZIyKyhg5krp0n9W\nhmTaqfW0i6v+u73hRBttsPQ9+v4jOoxHDc81nmEyBfsebwQ6SeUNnvLDkGzyVUov\ntnKWILAmCWYzKvvd/zK+RyhnnXGDNFSH+LB0OJ0CgYBwVOI3L4f6n6u/KWdW5PjX\n0yYuG/x8gujqBlFZA6oZsGrKYOmnBuuvmf8UUXdKzGxB0F0MIzYb556SyzLrWTZk\nZxJwq0jcMtbidEeIJP99mp0fvvVhhRWr/+H5/ju8SWLY4n492M3jUR17Ccnj2CBp\nZWxGzvjSKJbsSbJoedooZw==\n-----END PRIVATE KEY-----\n",
-    "client_email": "sheets-integration@inventario-ti-451517.iam.gserviceaccount.com",
-    "client_id": "100024479860052586326",
-    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-    "token_uri": "https://oauth2.googleapis.com/token",
-    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/sheets-integration%40inventario-ti-451517.iam.gserviceaccount.com",
-    "universe_domain": "googleapis.com"
-  }
-  );
-
   static const _spreadsheetId = '18Q1GpMRtRc5EqWhFHA8ri5owaXfi0Jux7ANxj7vHLC8';
+  static const _credentialsPath = 'assets/credentials.json';
 
-  /// Envia dados para a planilha
-  Future<void> appendData(String text) async {
-    final client = await clientViaServiceAccount(_credentials, [SheetsApi.spreadsheetsScope]);
+  static final GoogleSheetsService _instance = GoogleSheetsService._internal();
+  factory GoogleSheetsService() => _instance;
+  GoogleSheetsService._internal();
+
+  String? _patrimonio;
+  String? _modelo;
+
+  Future<ServiceAccountCredentials> _getCredentials() async {
+    try {
+      final jsonString = await rootBundle.loadString(_credentialsPath);
+      final jsonData = json.decode(jsonString) as Map<String, dynamic>;
+      return ServiceAccountCredentials.fromJson(jsonData);
+    } catch (e) {
+      print('Erro ao carregar credenciais: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> cacheData(String text, String scanType) async {
+    try {
+      if (scanType == 'patrimonio') {
+        _patrimonio = text;
+      } else if (scanType == 'modelo') {
+        _modelo = text;
+      }
+
+      if (_patrimonio != null && _modelo != null) {
+        await _appendData(_patrimonio!, _modelo!);
+        _patrimonio = null;
+        _modelo = null;
+      }
+    } catch (e) {
+      print('Erro no cacheData: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> _appendData(String patrimonio, String modelo) async {
+    final credentials = await _getCredentials();
+    final client = await clientViaServiceAccount(credentials, [SheetsApi.spreadsheetsScope]);
     final sheetsApi = SheetsApi(client);
 
-    final valueRange = ValueRange.fromJson({
-      'values': [
-        [DateTime.now().toIso8601String(), text]
-      ],
-    });
+    try {
+      final timestamp = DateTime.now().toIso8601String();
+      final valueRange = ValueRange.fromJson({
+        'values': [[timestamp, patrimonio, modelo]]
+      });
 
-    await sheetsApi.spreadsheets.values.append(
-      valueRange,
-      _spreadsheetId,
-      'A1',
-      valueInputOption: 'USER_ENTERED',
-      insertDataOption: 'INSERT_ROWS',
-    );
+      await sheetsApi.spreadsheets.values.append(
+        valueRange,
+        _spreadsheetId,
+        'A1',
+        valueInputOption: 'USER_ENTERED',
+        insertDataOption: 'INSERT_ROWS',
+      );
 
-    client.close();
+      print('Dados enviados com sucesso!');
+    } catch (e) {
+      print('Erro no appendData: $e');
+      throw Exception('Erro ao enviar para a planilha: ${e.toString()}');
+    } finally {
+      client.close();
+    }
   }
 }
+
+  List<dynamic> _getFormattedValues(String text, String scanType) {
+    final timestamp = DateTime.now().toIso8601String();
+    return scanType == 'patrimonio' ? [timestamp, text] : [timestamp, '', text];
+  }
 
 /// Tela de captura com a câmera
 class CameraScreen extends StatefulWidget {
   final List<CameraDescription> cameras;
+  final String scanType;
 
-  const CameraScreen({super.key, required this.cameras});
+  const CameraScreen({super.key, required this.cameras, required this.scanType});
 
   @override
   State<CameraScreen> createState() => _CameraScreenState();
 }
 
-/// Estado da tela da câmera
 class _CameraScreenState extends State<CameraScreen> {
   late CameraController _controller;
   final TextRecognizer _textRecognizer = TextRecognizer();
-  final _extractedText = '';
   bool _isLoading = true;
   bool _isProcessing = false;
 
@@ -149,47 +181,44 @@ class _CameraScreenState extends State<CameraScreen> {
     _initializeCamera();
   }
 
-  /// Inicializa o controlador da câmera
   Future<void> _initializeCamera() async {
     try {
-      _controller = CameraController(
-        widget.cameras[0],
-        ResolutionPreset.medium,
-      );
+      _controller = CameraController(widget.cameras[0], ResolutionPreset.medium);
       await _controller.initialize();
     } catch (e) {
-      print('Erro na câmera: $e');
+      print('Erro ao inicializar a câmera: $e');
     }
-    if (mounted) {
-      setState(() => _isLoading = false);
-    }
+    if (mounted) setState(() => _isLoading = false);
   }
-
-  /// Processo completo de captura e processamento
+  // CAPTURA E PROCESSA A IMAGEM
   Future<void> _captureAndProcess() async {
     if (_isProcessing || !_controller.value.isInitialized) return;
 
+    XFile? image; // Declare a variável fora do try
     setState(() => _isProcessing = true);
 
     try {
-      final XFile image = await _controller.takePicture();
+      image = await _controller.takePicture(); // Atribua o valor aqui
       final inputImage = InputImage.fromFilePath(image.path);
       final recognizedText = await _textRecognizer.processImage(inputImage);
 
-      await GoogleSheetsService().appendData(recognizedText.text);
+      await GoogleSheetsService().cacheData(recognizedText.text, widget.scanType);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Dados enviados com sucesso!')),
+          SnackBar(content: Text('${widget.scanType.toUpperCase()} capturado!')),
         );
       }
-
-      final file = File(image.path);
-      if (await file.exists()) await file.delete();
 
     } catch (e) {
       print('Erro no processamento: $e');
     } finally {
+      // Mova a exclusão do arquivo para dentro deste bloco
+      if (image != null) {
+        final file = File(image.path);
+        if (await file.exists()) await file.delete();
+      }
+
       if (mounted) {
         setState(() => _isProcessing = false);
       }
@@ -206,37 +235,18 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Digitalização em Andamento'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Digitalização em Andamento'), centerTitle: true),
       body: Column(
         children: [
-          Expanded(
-            child: CameraPreview(_controller),
-          ),
+          Expanded(child: CameraPreview(_controller)),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: _isProcessing
                 ? const CircularProgressIndicator()
-                : ElevatedButton(
-              onPressed: _captureAndProcess,
-              child: const Text('CAPTURAR DOCUMENTO'),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              _extractedText,
-              style: const TextStyle(fontSize: 16),
-              textAlign: TextAlign.center,
-            ),
+                : ElevatedButton(onPressed: _captureAndProcess, child: const Text('CAPTURAR')),
           ),
         ],
       ),
