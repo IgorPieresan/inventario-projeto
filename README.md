@@ -36,4 +36,4 @@ Abaixo algumas capturas de tela do app em execução:
 ![Tela de Digitalização](./screenshots/img2.jpeg)
 
 ### Edição de Texto Extraído
-![Edição de Texto Extraído](./screenshots/digitalizaacao.jpeg)
+![Edição de Texto Extraído](./screenshots/digitalizacao.jpeg)
