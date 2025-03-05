@@ -29,15 +29,15 @@ Também oferece acesso direto à pasta do Drive para consultar arquivos relacion
 ## Screenshots
 Abaixo algumas capturas de tela do app em execução:
 
-<img src="./screenshots/img1.jpeg" width="300" alt="Tela Inicial">
+<img src="./screenshots/img1.jpeg" width="250" alt="Tela Inicial">
 
 ### Tela Inicial
 ![Tela Inicial](./screenshots/img1.jpeg)
 
-<img src="./screenshots/img2.jpeg" width="300" alt="Tela de Digitalização">
+<img src="./screenshots/img2.jpeg" width="250" alt="Tela de Digitalização">
 ### Tela de Digitalização
 ![Tela de Digitalização](./screenshots/img2.jpeg)
 
-<img src="./screenshots/digitalizacao.jpeg" width="300" alt="Edição de Texto Extraído">
+<img src="./screenshots/digitalizacao.jpeg" width="250" alt="Edição de Texto Extraído">
 ### Edição de Texto Extraído
 ![Edição de Texto Extraído](./screenshots/digitalizacao.jpeg)
