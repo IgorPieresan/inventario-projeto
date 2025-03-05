@@ -30,10 +30,10 @@ Também oferece acesso direto à pasta do Drive para consultar arquivos relacion
 Abaixo algumas capturas de tela do app em execução:
 
 ### Tela Inicial
-![Tela Inicial](./screenshots/img1")
+![Tela Inicial](./screenshots/img1)
 
 ### Tela de Digitalização
-![Tela de Digitalização](./screenshots/img2")
+![Tela de Digitalização](./screenshots/img2)
 
 ### Edição de Texto Extraído
-![Edição de Texto Extraído](./screenshots/digitalizaacao")
+![Edição de Texto Extraído](./screenshots/digitalizaacao)
