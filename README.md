@@ -6,12 +6,11 @@ Aplicativo para digitalização de patrimônios e integração com Google Sheets
 1. [Visão Geral](#visão-geral)
 2. [Funcionalidades](#funcionalidades)
 3. [Screenshots](#screenshots)
-4. [Como Executar](#como-executar)
-5. [Configurações Adicionais](#configurações-adicionais)
+4. [Benefícios](#benefícios)
+5. [Próximos Passos](#próximos-passos)
 6. [Tecnologias Utilizadas](#tecnologias-utilizadas)
 7. [Contribuindo](#contribuindo)
-8. [Licença](#licença)
-9. [Contato](#contato)
+
 
 ---
 
@@ -29,15 +28,46 @@ Também oferece acesso direto à pasta do Drive para consultar arquivos relacion
 ## Screenshots
 Abaixo algumas capturas de tela do app em execução:
 
-<img src="./screenshots/img1.jpeg" width="250" alt="Tela Inicial">
 
 ### Tela Inicial
-![Tela Inicial](./screenshots/img1.jpeg)
+<img src="./screenshots/img1.jpeg" width="250" alt="Tela Inicial">
 
-<img src="./screenshots/img2.jpeg" width="250" alt="Tela de Digitalização">
+
+
 ### Tela de Digitalização
-![Tela de Digitalização](./screenshots/img2.jpeg)
+<img src="./screenshots/img2.jpeg" width="250" alt="Tela de Digitalização">
 
-<img src="./screenshots/digitalizacao.jpeg" width="250" alt="Edição de Texto Extraído">
+
+
 ### Edição de Texto Extraído
-![Edição de Texto Extraído](./screenshots/digitalizacao.jpeg)
+<img src="./screenshots/digitalizacao.jpeg" width="250" alt="Edição de Texto Extraído">
+
+
+
+### Benefícios
+
+- **Agilidade:** Reduz a necessidade de digitação manual de códigos ou nomes de itens.
+- **Confiabilidade:** Integração direta com planilhas e armazenamento em nuvem.
+- **Escalabilidade:** Facilmente adaptável para diferentes ambientes ou quantidades de itens.
+
+
+### Próximos Passos
+
+- **Implementar autenticação de usuários.**
+- **Adicionar relatórios e dashboards de inventário.**
+- **Expandir para web (com Flutter Web) ou desktop.**
+
+
+### Tecnologias Utilizadas
+- **Flutter (Dart):** Framework para desenvolvimento mobile multiplataforma. 
+- **Google Sheets API:** Para leitura e escrita de dados em planilhas.
+- **Google Drive API:** Para acessar pastas e arquivos do Drive.
+- **Bibliotecas de OCR/Câmera:** (camera, image_picker, ou firebase_ml_vision) para digitalização.
+
+
+### Contribuindo
+
+**Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.**
+
+
+
