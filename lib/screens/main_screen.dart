@@ -8,7 +8,7 @@ class MainScreen extends StatelessWidget {
   const MainScreen({Key? key, required this.cameras}) : super(key: key);
 
   static const String googleSheetsUrl =
-      'https://docs.google.com/spreadsheets/d/118Q1GpMRtRc5EqWhFHA8ri5owaXfi0Jux7ANxj7vHLC8/edit';
+      'https://docs.google.com/spreadsheets/d/1FVnP0ehsSTh-BiHBZs_9_ISMud-zh_BtIh6aUOhMeBg/edit';
   static const String googleDriveUrl =
       'https://drive.google.com/drive/folders/1aDSiBZIVLcVx-igBOHbeYSof9YhRfj-y';
 
